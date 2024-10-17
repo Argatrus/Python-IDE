@@ -1,10 +1,9 @@
-from customtkinter import *
-from tkinter import *
+import customtkinter as ctk
 import os
 from codeview_widget import CodeView
 
-set_appearance_mode('Dark')
-set_default_color_theme('blue')
+ctk.set_appearance_mode('Dark')
+ctk.set_default_color_theme('blue')
 
 class Processing:
     def __init__(self, name='testing'):
@@ -27,26 +26,27 @@ class Processing:
             return file.read()
 
 
-class ClientSide(CTk):
+class ClientSide(ctk.CTk):
     def __init__(self, main= Processing):
         super().__init__()
         self.main = main()
         self.title('AS_IDE')
+        self.geometry('1920x1080')
         self.textbox = CodeView(self, font='Arial, 16')
-        self.save_button = CTkButton(self, text='Save', command=self.save)
-        self.run_button = CTkButton(self, text='Run', command=self.run)
-        self.open_file = CTkButton(self, text='Open File', command=self.open)
+        self.save_button = ctk.CTkButton(self, text='Save', command=self.save)
+        self.run_button = ctk.CTkButton(self, text='Run', command=self.run)
+        self.open_file = ctk.CTkButton(self, text='Open File', command=self.open)
         self.run_button.pack()
         self.save_button.pack()
         self.open_file.pack()
         self.textbox.pack()
 
     def run(self):
-        self.main.run(self.textbox.get('1.0', END))
+        self.main.run(self.textbox.get('1.0', ctk.END))
 
     def save(self):
         if self.main.name != 'testing':
-            self.main.save(self.textbox.get('1.0', END))
+            self.main.save(self.textbox.get('1.0', ctk.END))
         else:
             pass
 
@@ -54,14 +54,14 @@ class ClientSide(CTk):
         self.main = OpenFile(self)
         self.main.mainloop()
 
-class OpenFile(CTk):
+class OpenFile(ctk.CTk):
     def __init__(self, m: ClientSide):
         super().__init__()
         self.title('Open File')
         self.geometry('300x100')
-        self.label = CTkLabel(self, text='Enter Path Below...')
-        self.text = CTkEntry(self)
-        self.button = CTkButton(self, text='Press Here to Open File', command=self.path_take)
+        self.label = ctk.CTkLabel(self, text='Enter Path Below...')
+        self.text = ctk.CTkEntry(self)
+        self.button = ctk.CTkButton(self, text='Press Here to Open File', command=self.path_take)
         self.label.pack()
         self.text.pack()
         self.button.pack()
@@ -69,11 +69,11 @@ class OpenFile(CTk):
 
     def path_take(self):
         self.m.main = Processing(self.text.get())
-        self.m.textbox.delete('0.0', END)
-        self.m.textbox.insert(self.m.textbox.index(INSERT), self.m.main.show_code())
+        self.m.textbox.delete('0.0', ctk.END)
+        self.m.textbox.insert(self.m.textbox.index(ctk.INSERT), self.m.main.show_code())
         self.destroy()
 
-class SaveFile(CTk):
+class SaveFile(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.geometry('200x100')
