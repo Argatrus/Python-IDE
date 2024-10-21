@@ -21,10 +21,11 @@ class CodeView(tk.Text):
         super().__init__(master, cnf, **kw)
         self.yscrollbar.configure(command=self.yview)
         self.xscrollbar.configure(command=self.xview)
-        master.bind("(", self.bracket)
-        master.bind('"', self.string_quote)
-        master.bind("'", self.string_quote)
-        master.bind("<space>", self.refresh)
+        self.bind("(", self.bracket)
+        self.bind('"', self.string_quote)
+        self.bind("'", self.string_quote)
+        self.bind('<Return>', lambda x: self.new_line())
+        
         cdg = ColorDelegator()
         cdg.tagdefs['COMMENT'] = {'foreground': '#FF0000', 'background': '#1c1c1b'}
         cdg.tagdefs['KEYWORD'] = {'foreground': '#007F00', 'background': '#1c1c1b'}
@@ -37,16 +38,18 @@ class CodeView(tk.Text):
         Percolator(self).insertfilter(cdg)
         self.config(insertbackground='#FFFFFF')
 
+    def new_line(self):
+        tabs = self.get('insert linestart', 'insert lineend').count('\t')+self.get('insert lineend-1c', 'insert lineend').count(':')
+        self.insert(tk.INSERT, '\n'+'\t'*tabs)
+        pyautogui.press('backspace')
+
     def bracket(self, event):
-        if event.char == '(':
-            self.insert(self.index(tk.INSERT), ')')
-            pyautogui.keyUp('shift')
-            pyautogui.press('left')
+        self.insert('insert', '()')
+        pyautogui.press('backspace')
+        pyautogui.keyUp('shift')
+        pyautogui.press('left')
 
     def string_quote(self, event):
         self.insert(self.index(tk.INSERT), f'{event.char}')
         pyautogui.keyUp('shift')
         pyautogui.press('left')
-
-    def refresh(self, event):
-        self.data = list(globals().keys())

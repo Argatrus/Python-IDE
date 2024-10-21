@@ -31,7 +31,6 @@ class ClientSide(ctk.CTk):
         super().__init__()
         self.main = main()
         self.title('AS_IDE')
-        self.geometry('1920x1080')
         self.textbox = CodeView(self, font='Arial, 16')
         self.save_button = ctk.CTkButton(self, text='Save', command=self.save)
         self.run_button = ctk.CTkButton(self, text='Run', command=self.run)
@@ -43,6 +42,7 @@ class ClientSide(ctk.CTk):
 
     def run(self):
         self.main.run(self.textbox.get('1.0', ctk.END))
+
 
     def save(self):
         if self.main.name != 'testing':
