@@ -5,6 +5,7 @@ from codeview_widget import CodeView
 ctk.set_appearance_mode('Dark')
 ctk.set_default_color_theme('blue')
 
+
 class Processing:
     def __init__(self, name='nil'):
         self.codefile = []
@@ -55,11 +56,6 @@ class ClientSide(ctk.CTk):
         self.textbox.delete('0.0', ctk.END)
         self.textbox.insert('0.0', self.main.show_code())
 
-class SaveFile(ctk.CTk):
-    def __init__(self):
-        super().__init__()
-        self.geometry('200x100')
 
 if __name__ == '__main__':
-    app = ClientSide()
-    app.mainloop()
+    ClientSide().mainloop()
