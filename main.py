@@ -35,11 +35,6 @@ class ClientSide(ctk.CTk):
         self.save_button = ctk.CTkButton(self, text='Save', command=self.save)
         self.run_button = ctk.CTkButton(self, text='Run', command=self.run)
         self.open_file = ctk.CTkButton(self, text='Open File', command=self.open)
-        self.rowconfigure(0, weight=1)
-        self.rowconfigure(1, weight=1)
-        self.rowconfigure(2, weight=1)
-        self.rowconfigure(3, weight=1)
-        self.columnconfigure(0, weight=1)
         self.run_button.pack()
         self.save_button.pack()
         self.open_file.pack()
@@ -47,7 +42,6 @@ class ClientSide(ctk.CTk):
 
     def run(self):
         self.main.run(self.textbox.get('1.0', ctk.END))
-
 
     def save(self):
         if self.main.name != 'testing':
