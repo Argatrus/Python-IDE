@@ -6,13 +6,13 @@ ctk.set_appearance_mode('Dark')
 ctk.set_default_color_theme('blue')
 
 class Processing:
-    def __init__(self, name='testing'):
+    def __init__(self, name='testing.py'):
         self.codefile = []
         self.name = name
         self.currentcodefile = []
 
     def save(self, codefile):
-        with open(f'{self.name}.py', 'w') as file:
+        with open(f'{self.name}', 'w') as file:
             for line in codefile: file.write(line)
         self.currentcodefile = self.codefile
         return 'done'
@@ -22,7 +22,7 @@ class Processing:
         exec(code)
 
     def show_code(self):
-        with open(f'{self.name}.py', 'r') as file:
+        with open(f'{self.name}', 'r') as file:
             return file.read()
 
 
@@ -50,8 +50,9 @@ class ClientSide(ctk.CTk):
             pass
 
     def open(self):
-        self.main = OpenFile(self)
-        self.main.mainloop()
+        self.main = Processing(ctk.filedialog.askopenfilename())
+        self.textbox.delete('0.0', ctk.END)
+        self.textbox.insert('0.0', self.main.show_code())
 
 class OpenFile(ctk.CTk):
     def __init__(self, m: ClientSide):
