@@ -1,5 +1,5 @@
 import customtkinter as ctk
-import os
+import subprocess
 from codeview_widget import CodeView
 
 ctk.set_appearance_mode('Dark')
@@ -18,9 +18,9 @@ class Processing:
         self.currentcodefile = self.codefile
         return 'done'
 
-    def run(self, code):
-        os.system('cls')
-        exec(code)
+    def run(self):
+        command = f'python {self.name}'
+        return subprocess.run(command, shell=True, capture_output=True, text=True)
 
     def show_code(self):
         with open(f'{self.name}', 'r') as file:
@@ -31,18 +31,29 @@ class ClientSide(ctk.CTk):
     def __init__(self, main= Processing):
         super().__init__()
         self.main = main()
-        self.title('AS_IDE')
-        self.textbox = CodeView(self, font='Arial, 16')
-        self.save_button = ctk.CTkButton(self, text='Save', command=self.save)
-        self.run_button = ctk.CTkButton(self, text='Run', command=self.run)
+        self.title('IDE')
+        self.textbox = CodeView(self, font='Arial, 10')
+        self.save_button = ctk.CTkButton(self, text='Save File', command=self.save)
+        self.run_button = ctk.CTkButton(self, text='|>', command=self.run)
         self.open_file = ctk.CTkButton(self, text='Open File', command=self.open)
-        self.run_button.pack()
-        self.save_button.pack()
+        self.output_text = ctk.CTkTextbox(self, wrap='word', width=300, font=ctk.CTkFont(family='Arial', size=20))
         self.open_file.pack()
+        self.save_button.pack()
+        self.run_button.pack()
+        self.output_text.pack(side ='left', fill='both')
         self.textbox.pack(fill='both')
 
+
     def run(self):
-        self.main.run(self.textbox.get('1.0', ctk.END))
+        if self.main.name == 'nil':
+            self.main = Processing(ctk.filedialog.asksaveasfile().name)
+            self.main.save(self.textbox.get('1.0', ctk.END))
+        else:
+            result = self.main.run()
+            self.output_text.insert(ctk.END, result.stdout)
+            self.output_text.insert(ctk.END, result.stderr)
+            self.output_text.insert(ctk.END, '\n\n')
+
 
     def save(self):
         if self.main.name != 'nil':
