@@ -50,9 +50,10 @@ class ClientSide(ctk.CTk):
             self.main.save(self.textbox.get('1.0', ctk.END))
         else:
             result = self.main.run()
+            self.output_text.insert('end', 'PYTHON CODE OUTPUT:\n\n')
             self.output_text.insert(ctk.END, result.stdout)
             self.output_text.insert(ctk.END, result.stderr)
-            self.output_text.insert(ctk.END, '\n\n')
+            self.output_text.insert(ctk.END, '\n')
 
 
     def save(self):
