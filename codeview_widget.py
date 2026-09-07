@@ -50,6 +50,10 @@ class CodeView(tk.Text):
         pyautogui.press('left')
 
     def string_quote(self, event):
+        pyautogui.keyUp('shift')
         self.insert(self.index(tk.INSERT), f'{event.char}')
         pyautogui.keyUp('shift')
         pyautogui.press('left')
+
+    def change_font_size(self, value: int):
+        self.configure(font=tkfont.Font(family='Consolas', size=int(value)))

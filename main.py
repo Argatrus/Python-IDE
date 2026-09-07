@@ -19,7 +19,7 @@ class Processing:
         return 'done'
 
     def run(self):
-        command = f'python {self.name}'
+        command = f'python3 "{self.name}"'
         return subprocess.run(command, shell=True, capture_output=True, text=True)
 
     def show_code(self):
@@ -37,12 +37,28 @@ class ClientSide(ctk.CTk):
         self.run_button = ctk.CTkButton(self, text='|>', command=self.run)
         self.open_file = ctk.CTkButton(self, text='Open File', command=self.open)
         self.output_text = ctk.CTkTextbox(self, wrap='word', width=300, font=ctk.CTkFont(family='Arial', size=20))
-        self.open_file.pack()
+        self.text_size = ctk.CTkEntry(self, placeholder_text='Font Size', width=100, font=ctk.CTkFont(family='Arial', size=15))
+        self.change_text_size_button = ctk.CTkButton(self, text='Change Font Size', command=lambda: self.change_font_size(int(self.text_size.get())))
+        self.open_file.pack(side="top")
         self.save_button.pack()
         self.run_button.pack()
+        self.text_size.pack(side="top")
+        self.change_text_size_button.pack(side="top")
         self.output_text.pack(side ='left', fill='both')
-        self.textbox.pack(fill='both')
+        self.textbox.pack(fill='both', expand = True)
+        try:
+            with open('config.txt', 'r') as file:
+                self.textbox.change_font_size(int(file.read()))
+        except FileNotFoundError:
+            with open('config.txt', 'w') as file:
+                file.write('24')
+            self.textbox.change_font_size(24)
 
+    def change_font_size(self, value: int):
+        self.pack_propagate(False)
+        self.textbox.change_font_size(int(value))
+        with open('config.txt', 'w') as file:
+            file.write(str(value))
 
     def run(self):
         if self.main.name == 'nil':
